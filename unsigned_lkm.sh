@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 
-# SCRIPT: finding_unsigned_lkm.sh
+# SCRIPT: unsigned_lkm.sh
 # DESCRIPTION: -
 # USAGE: -
 

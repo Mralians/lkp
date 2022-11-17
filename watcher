@@ -1,0 +1,38 @@
+#! /usr/bin/env bash
+
+set -u
+#set -e
+#set -x
+#set -n
+
+EXIT_SUCCESS=0
+EXIT_FAILURE=1
+
+_FILENAME="${1}"
+_B_FILENAME="$(basename "${_FILENAME}" .c)"
+
+if [[ $# -lt 1 ]];then
+  printf "%s: [filename].c\n" "${0}"
+  exit ${EXIT_FAILURE}
+fi
+
+clear
+while true;do
+  printf "[*] waiting for new change\n"
+  inotifywait -q -e modify -r "${_FILENAME}"
+  printf "[*] building [%s] module\n" "${_B_FILENAME}"
+  make
+  if [[ "${?}" -ne 0 ]];then
+    continue
+  fi
+  printf "[*] inserting [%s] module\n" "${_B_FILENAME}"
+  sudo rmmod "${_B_FILENAME}.ko"
+  sudo insmod "${_B_FILENAME}.ko"
+  printf "[*] [%s] loaded successfully\n\n" "${_B_FILENAME}"
+done
+
+set +u
+set +x
+set +n
+
+exit "${EXIT_SUCCESS}"
