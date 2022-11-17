@@ -9,10 +9,8 @@
 #include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/init.h>
-#include <linux/sched.h>	// current()
-#include <linux/preempt.h>	// in_task()
-#include <linux/uidgid.h>	// current_{e}{u,g}id()
-#include <linux/cred.h>		// (from,make))kuid()
+#include <linux/sched.h>
+#include <linux/cred.h>
 #include <linux/fs.h>
 #include <linux/slab.h>
 #include <linux/uaccess.h>
@@ -49,7 +47,7 @@ static int procs_showall(void)
 	return num_procs_rd;
 }
 
-static int __init procs_init(void)
+static int __init procs_showall_init(void)
 {
 	pr_info("inserted\n");
 	int num_procs = procs_showall();
@@ -57,10 +55,10 @@ static int __init procs_init(void)
 	return 0;
 }
 
-static void __exit procs_exit(void)
+static void __exit procs_showall_exit(void)
 {
 	pr_info("removed\n");
 }
 
-module_init(procs_init);
-module_exit(procs_exit);
+module_init(procs_showall_init);
+module_exit(procs_showall_exit);
